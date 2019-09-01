@@ -61,3 +61,15 @@ with description('Checkout'):
         checkout.scan(voucher)
 
         expect(checkout.calculate_total()).to(equal(Decimal(10.00)))
+
+    with it('applies pricing rule when two gift cards and one random item are purchased'):
+        voucher = Item('VOUCHER', 'Gift Card', 5.00)
+        t_shirt = Item('TSHIRT', 'Summer T-Shirt', 20.00)
+
+        checkout = Checkout(PricingRules({'VOUCHER': VoucherRule()}))
+
+        checkout.scan(voucher)
+        checkout.scan(t_shirt)
+        checkout.scan(voucher)
+
+        expect(checkout.calculate_total()).to(equal(Decimal(25.00)))

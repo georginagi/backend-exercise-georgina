@@ -1,3 +1,5 @@
+from _decimal import Decimal
+
 from models.item import Item
 from models.pricing_rules import PricingRules
 from models.scanned_item import ScannedItem
@@ -18,5 +20,13 @@ class Checkout:
     def calculate_total(self):
         amount = 0
         for scanned_item in self.scanned_items_dict.values():
-            amount += scanned_item.total_price
+            if len(self.pricing_rules.rules) == 0:
+                scanned_item.total_price = scanned_item.total_price * scanned_item.quantity
+            else:
+                if scanned_item.item.code in self.pricing_rules.rules:
+                    rule = self.pricing_rules.rules[scanned_item.item.code]
+                    scanned_item.total_price = rule.apply_rule(scanned_item)
+                else:
+                    scanned_item.total_price = scanned_item.total_price * scanned_item.quantity
+            amount += Decimal(scanned_item.total_price)
         return amount

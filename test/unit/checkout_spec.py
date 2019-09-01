@@ -5,7 +5,7 @@ from mamba import *
 
 from actions.checkout import Checkout
 from models.item import Item
-from models.pricing_rules import PricingRules, VoucherRule
+from models.pricing_rules import PricingRules, VoucherRule, TShirtRule
 
 with description('Checkout'):
     with it('calculates the total amount considering only the one product scanned'):
@@ -73,3 +73,14 @@ with description('Checkout'):
         checkout.scan(voucher)
 
         expect(checkout.calculate_total()).to(equal(Decimal(25.00)))
+
+    with it('applies pricing rule when three shirts are purchased'):
+        t_shirt = Item('TSHIRT', 'Summer T-Shirt', 20.00)
+
+        checkout = Checkout(PricingRules({'TSHIRT': TShirtRule()}))
+
+        checkout.scan(t_shirt)
+        checkout.scan(t_shirt)
+        checkout.scan(t_shirt)
+
+        expect(checkout.calculate_total()).to(equal(Decimal(57.00)))

@@ -1,4 +1,4 @@
-from _decimal import Decimal
+from decimal import Decimal
 
 from models.item import Item
 from models.pricing_rules import PricingRules

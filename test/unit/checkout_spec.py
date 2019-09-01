@@ -41,3 +41,12 @@ with description('Checkout'):
         checkout.scan(pants)
 
         expect(checkout.calculate_total()).to(equal(Decimal(32.50)))
+
+    with it('applies 2-1 when two gift cards are purchased'):
+        voucher = Item('VOUCHER', 'Gift Card', 5.00)
+
+        checkout = Checkout(PricingRules({'VOUCHER': VoucherRule()}))
+        checkout.scan(voucher)
+        checkout.scan(voucher)
+
+        expect(checkout.calculate_total()).to(equal(Decimal(5.00)))

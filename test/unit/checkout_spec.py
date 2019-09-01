@@ -84,3 +84,39 @@ with description('Checkout'):
         checkout.scan(t_shirt)
 
         expect(checkout.calculate_total()).to(equal(Decimal(57.00)))
+
+    with it('applies pricing rule when at least three shirts and a random item are purchased'):
+        t_shirt = Item('TSHIRT', 'Summer T-Shirt', 20.00)
+        voucher = Item('VOUCHER', 'Gift Card', 5.00)
+
+        pricing_rules_dict = {'VOUCHER': VoucherRule(), 'TSHIRT': TShirtRule()}
+        pricing_rules = PricingRules(pricing_rules_dict)
+
+        checkout = Checkout(pricing_rules)
+
+        checkout.scan(t_shirt)
+        checkout.scan(t_shirt)
+        checkout.scan(t_shirt)
+        checkout.scan(voucher)
+        checkout.scan(t_shirt)
+
+        expect(checkout.calculate_total()).to(equal(Decimal(81.00)))
+
+    with it('applies pricing rules when the user purchases at least three gift cards and at least three shirts'):
+        t_shirt = Item('TSHIRT', 'Summer T-Shirt', 20.00)
+        voucher = Item('VOUCHER', 'Gift Card', 5.00)
+        pants = Item('PANTS', 'Summer Pants', 7.50)
+
+        pricing_rules_dict = {'VOUCHER': VoucherRule(), 'TSHIRT': TShirtRule()}
+
+        checkout = Checkout(PricingRules(pricing_rules_dict))
+
+        checkout.scan(voucher)
+        checkout.scan(t_shirt)
+        checkout.scan(voucher)
+        checkout.scan(voucher)
+        checkout.scan(pants)
+        checkout.scan(t_shirt)
+        checkout.scan(t_shirt)
+
+        expect(checkout.calculate_total()).to(equal(Decimal(74.50)))

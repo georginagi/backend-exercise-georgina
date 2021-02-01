@@ -78,7 +78,7 @@ For that reason and since we have only two pricing rules I hard coded their logi
 that given a scenario with more pricing rules we would have enough similar patterns to create
 a better abstraction.
 
-- Regarding the tests, I realised after completing that the tests for the checkout were not only
+- Testing wise, I realised after completing the exercise that the tests for the checkout were not only
 testing the checkout unit but also whether the hard coded logic of the rule was applied correctly.
 For that reason, I would prefer to have written tests for the rules themselves when implementing them
 and not only receive feedback for their validity from the checkout spec.
